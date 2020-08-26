@@ -1,5 +1,5 @@
 import { getDbInstance } from "../utils/DB";
-import { ObjectID } from "mongodb";
+import { Binary } from "mongodb";
 
 const COLLECTION_NAME = "Posts"
 
@@ -21,11 +21,11 @@ export const getPost = (filter?: { type: string }) => {
 export const deletePosts = (id: string) => {
   const db = getDbInstance()
   const userCollection = db.collection<UserData>(COLLECTION_NAME)
-  return userCollection.deleteOne({ _id: new ObjectID(id) })
+  return userCollection.deleteOne({ _id: new Binary(new Buffer(id, "base64"), 3) })
 }
 
 export interface UserData {
-  _id: string | ObjectID;
+  _id: string | Binary;
   FullName: string;
   Address: string;
   EmailID: string;
