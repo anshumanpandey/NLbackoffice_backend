@@ -10,8 +10,8 @@ bookingsRoutes.get('/find', jwt({ secret: process.env.JWT_SECRET || 'aa', algori
   res.send(users);
 }));
 
-bookingsRoutes.delete('/delete/:id', jwt({ secret: process.env.JWT_SECRET || 'aa', algorithms: ['HS256'] }), asyncHandler(async (req, res) => {
-  await deleteBookings(req.params.id)
+bookingsRoutes.delete('/delete', jwt({ secret: process.env.JWT_SECRET || 'aa', algorithms: ['HS256'] }), asyncHandler(async (req, res) => {
+  await deleteBookings(req.body.id)
   res.send({ usccess: "Booking deleted"});
 }));
 

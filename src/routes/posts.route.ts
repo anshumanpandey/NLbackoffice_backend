@@ -10,8 +10,8 @@ postsRoutes.get('/find', jwt({ secret: process.env.JWT_SECRET || 'aa', algorithm
   res.send(users);
 }));
 
-postsRoutes.delete('/delete/:id', jwt({ secret: process.env.JWT_SECRET || 'aa', algorithms: ['HS256'] }), asyncHandler(async (req, res) => {
-  await deletePosts(req.params.id)
+postsRoutes.delete('/delete', jwt({ secret: process.env.JWT_SECRET || 'aa', algorithms: ['HS256'] }), asyncHandler(async (req, res) => {
+  await deletePosts(req.body.id)
   res.send({ usccess: "Booking deleted"});
 }));
 
