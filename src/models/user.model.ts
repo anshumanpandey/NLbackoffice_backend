@@ -1,5 +1,6 @@
 import { getDbInstance } from "../utils/DB";
-import { ObjectID } from "mongodb";
+import { ObjectID, Binary } from "mongodb";
+import { BASE_URL } from "../utils/Constanst";
 
 const COLLECTION_NAME = "Users"
 
@@ -19,11 +20,11 @@ export const getUsers = (filter?: { type: string}) => {
 export const deleteUser = (id: string) => {
   const db = getDbInstance()
   const userCollection = db.collection<UserData>(COLLECTION_NAME)
-  return userCollection.deleteOne({ _id: new ObjectID(id) })
+  return userCollection.deleteOne({ _id: new Binary(new Buffer(id, "base64"), 3) })
 }
 
 export interface UserData {
-  _id:                  string | ObjectID;
+  _id:                  string | Binary;
   FullName:             string;
   Address:              string;
   EmailID:              string;
@@ -37,7 +38,7 @@ export interface UserData {
   ProfileImageWidth:    null;
   IsTempPassword:       boolean;
   Role:                 string;
-  ProfileImage:         null;
+  ProfileImage:         string | null;
   Achievements:         string;
   AboutUs:              string;
   Accomplishment:       null;
@@ -49,8 +50,8 @@ export interface UserData {
   Experiences:          any[];
   TravelPostCodes:      any[];
   Availabilities:       any[];
-  DBSCeritificate:      null;
-  VerificationDocument: null;
+  DBSCeritificate:      null | { Type : string, Path : string, Verified : true };
+  VerificationDocument: null | { Type : string, Path : string, Verified : true };
   TrainingLocations:    any[];
   Teams:                Team[];
   UpcomingMatches:      UpcomingMatch[];
