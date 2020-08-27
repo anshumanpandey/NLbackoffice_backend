@@ -11,10 +11,37 @@ export const saveUser = (user: UserData) => {
 }
 
 
-export const getUsers = (filter?: { type: string}) => {
+export const getUsers = (filter?: { type: string }) => {
   const db = getDbInstance()
   const userCollection = db.collection<UserData>(COLLECTION_NAME)
-  return userCollection.find({}).toArray().then(users => users.map(u => { delete u.Password; return u }))
+  return userCollection
+  .aggregate([{
+    "$lookup": {
+      from: "Users",
+      localField: "ConnectedUsers.UserId",
+      foreignField: "_id",
+      as: "ConnectedUsers"
+    },
+  },
+  ])
+  .toArray().then(users => users.map(u => {
+    delete u.Password;
+    u.ProfileImage = u.ProfileImage ? `${BASE_URL}${u.ProfileImage}`: u.ProfileImage;
+    if (u.DBSCeritificate && u.DBSCeritificate.Path) {
+      u.DBSCeritificate.Path = `${BASE_URL}${u.DBSCeritificate.Path}`;
+    }
+    if (u.VerificationDocument && u.VerificationDocument.Path) {
+      u.VerificationDocument.Path = `${BASE_URL}${u.VerificationDocument.Path}`;
+    }
+
+    if (u.TrainingLocations && u.TrainingLocations.length != 0) {
+      u.TrainingLocations = u.TrainingLocations.map(element => {
+        element.ImageUrl = `${BASE_URL}${element.ImageUrl}`
+        return element
+      });
+    }
+    return u
+  }))
 }
 
 export const deleteUser = (id: string) => {
@@ -24,59 +51,59 @@ export const deleteUser = (id: string) => {
 }
 
 export interface UserData {
-  _id:                  string | Binary;
-  FullName:             string;
-  Address:              string;
-  EmailID:              string;
-  DeviceID:             string;
-  MobileNo:             string;
-  PostCode:             string;
-  Password:             string;
-  AccessToken:          null;
-  SocialLoginType:      null;
-  ProfileImageHeight:   null;
-  ProfileImageWidth:    null;
-  IsTempPassword:       boolean;
-  Role:                 string;
-  ProfileImage:         string | null;
-  Achievements:         string;
-  AboutUs:              string;
-  Accomplishment:       null;
-  Lat:                  string;
-  Lng:                  string;
-  Rate:                 number;
-  TravelMile:           null;
-  BankAccount:          null;
-  Experiences:          any[];
-  TravelPostCodes:      any[];
-  Availabilities:       any[];
-  DBSCeritificate:      null | { Type : string, Path : string, Verified : true };
-  VerificationDocument: null | { Type : string, Path : string, Verified : true };
-  TrainingLocations:    any[];
-  Teams:                Team[];
-  UpcomingMatches:      UpcomingMatch[];
-  Coaches:              Coach[];
-  Reviews:              any[];
-  HiddenPosts:          any[];
-  ConnectedUsers:       any[];
-  Qualifications:       any[];
+  _id: string | Binary;
+  FullName: string;
+  Address: string;
+  EmailID: string;
+  DeviceID: string;
+  MobileNo: string;
+  PostCode: string;
+  Password: string;
+  AccessToken: null;
+  SocialLoginType: null;
+  ProfileImageHeight: null;
+  ProfileImageWidth: null;
+  IsTempPassword: boolean;
+  Role: string;
+  ProfileImage: string | null;
+  Achievements: string;
+  AboutUs: string;
+  Accomplishment: null;
+  Lat: string;
+  Lng: string;
+  Rate: number;
+  TravelMile: null;
+  BankAccount: null;
+  Experiences: any[];
+  TravelPostCodes: any[];
+  Availabilities: any[];
+  DBSCeritificate: null | { Type: string, Path: string, Verified: true };
+  VerificationDocument: null | { Type: string, Path: string, Verified: true };
+  TrainingLocations: any[];
+  Teams: Team[];
+  UpcomingMatches: UpcomingMatch[];
+  Coaches: Coach[];
+  Reviews: any[];
+  HiddenPosts: any[];
+  ConnectedUsers: any[];
+  Qualifications: any[];
 }
 
 export interface Coach {
   CoachId: string;
-  Status:  string;
+  Status: string;
 }
 
 export interface Team {
-  _id:       string;
-  TeamName:  string;
+  _id: string;
+  TeamName: string;
   TeamImage: null;
   StartDate: Date;
-  EndDate:   number;
+  EndDate: number;
 }
 
 export interface UpcomingMatch {
-  _id:       string;
-  TeamName:  string;
+  _id: string;
+  TeamName: string;
   MatchDate: Date;
 }
