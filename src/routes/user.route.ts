@@ -37,8 +37,8 @@ userRoutes.post('/login', validateParams(checkSchema({
 })), asyncHandler(async (req, res) => {
   const { email, password} = req.body;
 
-  if (email != "super_admin@nextlevel.com") throw new ApiError("Wrong email or password")
-  if (password != "CxQnx5rR") throw new ApiError("Wrong email or password")
+  if (email != "info@nextlevelfootballtraining.co.uk") throw new ApiError("Wrong email or password")
+  if (password != "Adminpassword10") throw new ApiError("Wrong email or password")
 
 
   var token = sign(userData, process.env.JWT_SECRET || 'aa', { expiresIn: '9999 years'});
