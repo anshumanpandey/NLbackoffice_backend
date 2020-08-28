@@ -9,8 +9,8 @@ bootstrap()
     const port = parseInt(process.env.PORT || '5000') || 5000
     if (process.env.HTTPS) {
         var options = {
-            key: readFileSync('./certs/server-key.pem'),
-            cert: readFileSync('./certs/server-cert.pem'),
+            key: readFileSync('./nextlevelfootballtraining.co.uk.pem'),
+            cert: readFileSync('./nextlevelfootballtraining.co.uk.crt'),
         };
 
         var server = createServer(options, app).listen(port, function(){
