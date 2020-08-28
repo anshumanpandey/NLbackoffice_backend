@@ -50,6 +50,17 @@ export const deleteUser = (id: string) => {
   return userCollection.deleteOne({ _id: new Binary(new Buffer(id, "base64"), 3) })
 }
 
+export const setVerify = (id: string, isVerified: boolean, entity: "DBSCeritificate" | "VerificationDocument") => {
+  const db = getDbInstance()
+  const userCollection = db.collection<UserData>(COLLECTION_NAME)
+  if (entity == "DBSCeritificate") {
+    return userCollection.updateOne({ _id: new Binary(new Buffer(id, "base64"), 3) }, { $set: { "DBSCeritificate.Verified": isVerified}})    
+  }
+  if (entity == "VerificationDocument") {
+    return userCollection.updateOne({ _id: new Binary(new Buffer(id, "base64"), 3) }, { $set: { "VerificationDocument.Verified": isVerified}})    
+  }
+}
+
 export interface UserData {
   _id: string | Binary;
   FullName: string;

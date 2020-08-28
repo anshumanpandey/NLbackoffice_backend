@@ -55,6 +55,11 @@ userRoutes.delete('/delete', jwt({ secret: process.env.JWT_SECRET || 'aa', algor
   res.send({ usccess: "User deleted"});
 }));
 
+userRoutes.post('/verify', jwt({ secret: process.env.JWT_SECRET || 'aa', algorithms: ['HS256'] }), asyncHandler(async (req, res) => {
+  await userController.setVerify(req.body.id, req.body.isVerified, req.body.entity)
+  res.send({ usccess: "User deleted"});
+}));
+
 userRoutes.get('/get', jwt({ secret: process.env.JWT_SECRET || 'aa', algorithms: ['HS256'] }), asyncHandler(async (req, res) => {
   res.send(userData);
 }));
