@@ -1,27 +1,27 @@
 import { getDbInstance } from "../utils/DB";
 import { Binary } from "mongodb";
+import { getBookings } from "./bookings.model";
 
-const COLLECTION_NAME = "Reviews"
 
-export const getReviews = (filter?: { type: string }) => {
-  const db = getDbInstance()
-  const userCollection = db.collection<UserData>(COLLECTION_NAME)
-  return userCollection.aggregate([{
-    "$lookup": {
-      from: "Users",
-      localField: "CoachId",
-      foreignField: "_id",
-      as: "Coach"
-    },
-  },
-  { "$unwind": { path: "$User"}, }
-  ]).toArray()
+export const getReviews = async (filter?: { type: string }) => {
+  const users = await getBookings()
+  const reviews = users.reduce<any[]>((arr, u) => {
+    arr.push(...u.Reviews)
+    return arr
+  },[])
+
+  return reviews
 }
 
 export const deleteReview = (id: string) => {
   const db = getDbInstance()
-  const userCollection = db.collection<UserData>(COLLECTION_NAME)
-  return userCollection.deleteOne({ _id: new Binary(new Buffer(id, "base64"), 3) })
+  const _id = new Binary(new Buffer(id, "base64"), 3)
+
+  const reviewsCollection = db.collection<UserData>("Bookings")
+  return reviewsCollection.updateOne(
+    { "Reviews._id": new Binary(new Buffer(id, "base64"), 3)},
+    { $pull: {"Reviews": { _id }}},
+    )
 }
 
 export interface UserData {

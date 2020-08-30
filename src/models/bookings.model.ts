@@ -41,6 +41,12 @@ export const deleteBookings = (id: string) => {
   return userCollection.deleteOne({ _id: new Binary(new Buffer(id, "base64"), 3) })
 }
 
+export const deleteBookingsByUser = (userId: string, options?: any) => {
+  const db = getDbInstance()
+  const userCollection = db.collection<UserData>(COLLECTION_NAME)
+  return userCollection.deleteMany({ "PlayerID": new Binary(new Buffer(userId, "base64"), 3) }, { session: options.session || undefined})
+}
+
 export interface UserData {
   _id: string | Binary;
   FullName: string;

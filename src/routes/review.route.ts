@@ -11,7 +11,7 @@ reviewRoutes.get('/find', jwt({ secret: process.env.JWT_SECRET || 'aa', algorith
 }));
 
 reviewRoutes.delete('/delete', jwt({ secret: process.env.JWT_SECRET || 'aa', algorithms: ['HS256'] }), asyncHandler(async (req, res) => {
-  await deleteReview(req.body.id)
+  const r = await deleteReview(req.body.id)
   res.send({ usccess: "Booking deleted"});
 }));
 

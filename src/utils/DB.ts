@@ -8,6 +8,7 @@ const dbName = process.env.DB_NAME || "NextLevelTraining";
 const url = `mongodb://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@${process.env.DB_IP || "44.233.116.105"}:${process.env.DB_PORT || "27017"}/${dbName}`;
 
 let DbInstance: Db | null = null
+let mongoClient: MongoClient | null = null
  
 // Use connect method to connect to the server
 export const checkConnection = () => {
@@ -18,7 +19,8 @@ export const checkConnection = () => {
         return
       }
       console.log("Connected successfully to server");
-     
+
+      mongoClient = client
       DbInstance = client.db();
       res()
     });
@@ -28,4 +30,9 @@ export const checkConnection = () => {
 export const getDbInstance = () => {
   if (!DbInstance) throw new ApiError("Failed to connect to server")
   return DbInstance
+}
+
+export const getMongoClient = () => {
+  if (!mongoClient) throw new ApiError("Failed to connect to server")
+  return mongoClient
 }

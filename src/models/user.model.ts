@@ -1,6 +1,8 @@
-import { getDbInstance } from "../utils/DB";
+import { getDbInstance, getMongoClient } from "../utils/DB";
 import { ObjectID, Binary } from "mongodb";
 import { BASE_URL } from "../utils/Constanst";
+import { deleteBookingsByUser } from "./bookings.model";
+import { deletePostsByUser } from "./post.model";
 
 const COLLECTION_NAME = "Users"
 
@@ -44,10 +46,18 @@ export const getUsers = (filter?: { type: string }) => {
   }))
 }
 
-export const deleteUser = (id: string) => {
+export const deleteUser = async (id: string) => {
   const db = getDbInstance()
   const userCollection = db.collection<UserData>(COLLECTION_NAME)
-  return userCollection.deleteOne({ _id: new Binary(new Buffer(id, "base64"), 3) })
+  const client = getMongoClient()
+  const session = client.startSession()
+  try {
+    await userCollection.deleteOne({ _id: new Binary(new Buffer(id, "base64"), 3) }, { session })
+    await deleteBookingsByUser(id, { session });
+    await deletePostsByUser(id, { session })
+  } finally {
+    await session.endSession();
+  }
 }
 
 export const setVerify = (id: string, isVerified: boolean, entity: "DBSCeritificate" | "VerificationDocument") => {
