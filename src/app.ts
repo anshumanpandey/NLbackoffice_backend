@@ -4,6 +4,7 @@ import * as bodyParser from 'body-parser';
 import { routes } from './routes';
 import { ApiError } from './utils/ApiError';
 import { checkConnection } from './utils/DB';
+import { bootstrapScheduledNotification } from './models/scheduledNotification.model';
 var morgan = require('morgan')
 var cors = require('cors')
 
@@ -54,6 +55,7 @@ app.use((err:any, req: express.Request, res: express.Response, next: express.Nex
 
 const bootstrap = () => {
     return checkConnection()
+    .then(bootstrapScheduledNotification)
 }
 
 export {

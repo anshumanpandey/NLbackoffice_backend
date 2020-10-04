@@ -3,6 +3,7 @@ import { userRoutes } from './user.route';
 import { bookingsRoutes } from './bookings.route';
 import { postsRoutes } from './posts.route';
 import { reviewRoutes } from './review.route';
+import { scheduledNotificationRoutes } from './scheduledNotification.route';
 
 export const routes = express();
 
@@ -10,3 +11,4 @@ routes.use("/user",userRoutes)
 routes.use("/booking",bookingsRoutes)
 routes.use("/post",postsRoutes)
 routes.use("/review",reviewRoutes)
+routes.use("/scheduledNotification",scheduledNotificationRoutes)
