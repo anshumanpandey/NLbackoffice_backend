@@ -12,7 +12,7 @@ let mongoClient: MongoClient | null = null
  
 // Use connect method to connect to the server
 export const checkConnection = () => {
-  return new Promise((res,rej) => {
+  return new Promise<void>((res,rej) => {
   MongoClient.connect(url, {useUnifiedTopology: true }, function(err, client) {
       if (err) {
         rej(err)

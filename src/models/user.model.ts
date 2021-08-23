@@ -79,7 +79,7 @@ export interface UserData {
   DeviceID: string;
   MobileNo: string;
   PostCode: string;
-  Password: string;
+  Password?: string;
   AccessToken: null;
   SocialLoginType: null;
   ProfileImageHeight: null;
