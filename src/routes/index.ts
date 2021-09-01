@@ -6,6 +6,7 @@ import { reviewRoutes } from "./review.route";
 import { scheduledNotificationRoutes } from "./scheduledNotification.route";
 import { creditHistoryRoutes } from "./creditHistory.route";
 import { leadsRoutes } from "./leads.route";
+import { messagesRoutes } from "./messages.route";
 
 export const routes = express();
 
@@ -15,4 +16,5 @@ routes.use("/post", postsRoutes);
 routes.use("/review", reviewRoutes);
 routes.use("/creditHistory", creditHistoryRoutes);
 routes.use("/leads", leadsRoutes);
+routes.use("/messages", messagesRoutes);
 routes.use("/scheduledNotification", scheduledNotificationRoutes);
