@@ -5,6 +5,7 @@ import { BASE_URL } from "../utils/Constanst";
 import { deleteBookingsByUser } from "./bookings.model";
 import { deletePostsByUser } from "./post.model";
 import { generatePass } from "../utils/generatePassword";
+var pbkdf2 = require('pbkdf2')
 
 const COLLECTION_NAME = "Users";
 
@@ -14,7 +15,7 @@ export const saveUser = async (
 ) => {
   const db = getDbInstance();
   const userCollection = db.collection<
-    { _id: Binary; password: string } & CreateUserParams
+    { _id: Binary; Password: string } & CreateUserParams
   >(COLLECTION_NAME);
   const options = {
     session: opt?.t,
@@ -23,11 +24,23 @@ export const saveUser = async (
   const id = Buffer.from(uuidv4(), "binary");
   const luuid = new Binary(id, 3);
 
+  const pass = generatePass();
+
+  // this password encryption does not work
+  const buf = Buffer.from([128/8]);
+  const hashedPass = pbkdf2.pbkdf2Sync(
+    pass,
+    buf.writeInt8(128/8).toString(),
+    10000,
+    256/8,
+    "sha1")
+    .toString("base64");
+
   const u = await userCollection.insertOne(
     {
       _id: luuid,
       ...generateUserStoreValues(user),
-      password: generatePass(),
+      Password: hashedPass,
     },
     options
   );
