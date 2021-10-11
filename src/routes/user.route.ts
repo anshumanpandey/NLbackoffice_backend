@@ -6,6 +6,7 @@ import { sign } from "jsonwebtoken";
 import { validateParams } from "../middlewares/routeValidation.middleware";
 import { ApiError } from "../utils/ApiError";
 import * as userController from "../models/user.model";
+import { ApiKeyValidator } from "../middlewares/apiKeyValidator.middleware";
 
 const userData = {
   role: "SUPER_ADMIN",
@@ -99,6 +100,7 @@ userRoutes.get(
 
 userRoutes.post(
   "/create",
+  ApiKeyValidator,
   validateParams(
     checkSchema({
       fullName: {

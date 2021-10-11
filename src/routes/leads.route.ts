@@ -4,6 +4,7 @@ import asyncHandler from "express-async-handler";
 import { checkSchema } from "express-validator";
 import { Binary } from "mongodb";
 import { validateParams } from "../middlewares";
+import { ApiKeyValidator } from "../middlewares/apiKeyValidator.middleware";
 import {
   getHistory,
   createLead,
@@ -34,6 +35,7 @@ export interface Lead {
 
 leadsRoutes.post(
   "/create",
+  ApiKeyValidator,
   validateParams(
     checkSchema({
       experience: {
@@ -123,7 +125,7 @@ leadsRoutes.post(
       Web: req.body.web,
       UserId: user._id,
     };
-    const users = await createLead(leadParams);
-    res.send(users);
+    await createLead(leadParams);
+    res.send({ success: true });
   })
 );
