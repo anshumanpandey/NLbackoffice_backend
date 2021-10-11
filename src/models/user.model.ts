@@ -22,7 +22,7 @@ export const saveUser = async (
   };
 
   const id = Buffer.from(uuidv4(), "binary");
-  const luuid = new Binary(id, 3);
+  const luuid = new Binary(id.slice(0, 16), 3);
 
   const pass = generatePass();
 
