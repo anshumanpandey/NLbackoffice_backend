@@ -167,6 +167,9 @@ userRoutes.post(
           errorMessage: "Missing field",
           negated: true,
         },
+        isEmail: {
+          errorMessage: "Invalid email address"
+        },
         trim: true,
       },
       role: {
